@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .modal-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.75);
+          z-index: 100;
+        }
+    
+        .modal {
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          max-width: 90vw;
+          width: 500px;
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          z-index: 200;
+        }
+    
+        .hidden {
+          display: none !important;
+        }
+      </style>
+</head>
+<body class="bg-slate-700">
+    <header class="bg-gray-800 py-4">
+        <div class="container mx-auto px-4 flex flex-row items-center justify-between">
+          
+          <button onclick="openSidebar()" class="bg-indigo-500 p-2 w-24 text-white rounded-md shadow-lg">Menu</button>
+          <h1 class="text-2xl text-white font-bold sm:transform sm:-translate-x-8">MovieLand</h1>
+        </div>
+      </header>
+
+    
+      <div id="sidebar" class="sidebar transition ease-in absolute transform -translate-x-full -translate-y-24 flex py-12 px-8 w-96 flex-col bg-slate-800">
+        <div class="sidebar-top flex flex-row items-center justify-between py-4">
+          <h1 class="text-white font-bold text-xl">MovieLand</h1>
+          <button onclick="closeSidebar()" class="bg-indigo-600 text-white rounded-md p-2 w-16">Close</button>
+        </div>
+        <a href="#" class="bg-indigo-500 mt-4 px-4 h-12 text-center py-2 font-semibold text-white rounded-lg shadow-lg hover:bg-indigo-600 transition ease-in">Home</a>
+        <button onclick="goAbout()" class="bg-indigo-500 mt-4 h-12 rounded-md text-white font-semibold shadow-lg hover:bg-indigo-600">About</button>
+        <a href="watchlist.html" class="bg-indigo-500 mt-4 px-4 h-12 text-center py-2 font-semibold text-white rounded-lg shadow-lg hover:bg-indigo-600 transition ease-in">WatchList</a>
+        <a href="#" class="bg-indigo-500 mt-4 px-4 h-12 text-center py-2 font-semibold text-white rounded-lg shadow-lg hover:bg-indigo-600 transition ease-in">Contact</a>
+        <a href="#" class="bg-indigo-500 mt-4 px-4 h-12 text-center py-2 font-semibold text-white rounded-lg shadow-lg hover:bg-indigo-600 transition ease-in">Developers</a>
+        <button onclick="signOut()" class="bg-indigo-500 mt-4 h-12 rounded-md text-white font-semibold shadow-lg hover:bg-indigo-600">Log Out</button>
+      </div>
+
+
+    
+      <main class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+          <input id="searchInput" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" type="search" placeholder="Search movies...">
+          <button id="clearButton" class="ml-2 px-4 py-2 bg-gray-500 text-white rounded-lg focus:outline-none">Clear</button>
+        </div>
+    
+        <div id="movieGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+    
+        <div id="modal" class="modal-overlay hidden">
+          <div class="modal">
+            <h2 id="modalTitle" class="text-2xl font-bold mb-4"></h2>
+            <div id="modalContent"></div>
+            <button id="closeModal" class="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg focus:outline-none">Close</button>
+          </div>
+        </div>
+      </main>
+      <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

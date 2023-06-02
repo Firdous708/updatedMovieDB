@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wish List</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="bg-slate-800 text-white p-12">
+    <div class="wishlist-top flex items-center justify-between mb-8 ">
+        <h1 class="text-white font-bold text-xl ">Watch List</h1>
+        <a href="index.html" class="bg-indigo-500 w-16 text-center rounded-md p-2 shadow-lg">Back</a>
+    </div>
+    <div id="watchlist" class="grid gap-8 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"></div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
+    
+    <script>
+        // Assuming you have already authenticated the user
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-2KwBqTU23CugMSJitOuK-KwFCG-9OEE",
+  authDomain: "movieland-4aa10.firebaseapp.com",
+  projectId: "movieland-4aa10",
+  storageBucket: "movieland-4aa10.appspot.com",
+  messagingSenderId: "591411419194",
+  appId: "1:591411419194:web:d9a1fa72e73698c535bd03"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // Get a reference to the Firestore database
+                const db = firebase.firestore();
+            
+                // Retrieve the user's document from Firestore
+                const userRef = db.collection("users").doc(user.uid);
+            
+                // Retrieve the user's watchlist array from Firestore
+                userRef.get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        const watchlist = userData.watchlist;
+            
+                        // Display the watchlist on the landing.html page
+                        const watchlistElement = document.getElementById("watchlist");
+            
+                        // Fetch movie details for each movie ID in the watchlist
+                        watchlist.forEach((movieId) => {
+                            fetchMovieDetails(movieId)
+                                .then((movieData) => {
+                                    // Create a new element for each movie in the watchlist
+                                    const movieElement = document.createElement("div");
+                                    movieElement.classList.add("movie-item");
+
+                                    const imageElement = document.createElement("img");
+                                    imageElement.src = movieData.image;
+                                    movieElement.appendChild(imageElement);
+
+                                    const titleElement = document.createElement("p");
+                                    titleElement.textContent = movieData.title;
+                                    movieElement.appendChild(titleElement);
+                                    
+                                    watchlistElement.appendChild(movieElement);
+                                })
+                                .catch((error) => {
+                                    console.log("Error fetching movie details:", error);
+                                });
+                        });
+                    } else {
+                        // User document does not exist
+                        console.log("User document does not exist");
+                    }
+                }).catch((error) => {
+                    console.log("Error getting user's watchlist:", error);
+                });
+            } else {
+                // User is not logged in
+                console.log("User is not logged in");
+            }
+        });
+    
+        // Function to fetch movie details from the MovieDB API
+        function fetchMovieDetails(movieId) {
+            const apiKey = "4a7045405b89e8d7f06bb6f90317652a";
+            const apiUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+    
+            return fetch(apiUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    return {
+                        title: data.title,
+                        image: `https://image.tmdb.org/t/p/w200${data.poster_path}`,
+                        // Add other movie details as needed
+                    };
+                });
+        }
+    </script>
+</body>
+</html>
